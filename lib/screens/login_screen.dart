@@ -105,10 +105,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                           '+91${_phoneNumberController.text}'),
                                 ),
                               ).then((value) {
-                                setState(() {
-                                  _phoneNumberController.clear();
-                                  auth.isLoading = false;
-                                });
+                                if (mounted) {
+                                  setState(() {
+                                    _phoneNumberController.clear();
+                                    auth.isLoading = false;
+                                  });
+                                }
                               });
                             },
                             child: auth.isLoading
@@ -123,8 +125,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                         ? "Continue"
                                         : "Enter Phone Number",
                                     style: const TextStyle(
-                                      fontSize: 20,
-                                    ),
+                                        fontSize: 20, color: Colors.white),
                                   ),
                           ),
                         ),

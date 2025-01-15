@@ -74,6 +74,7 @@ class _NearByStoreState extends State<NearByStore> {
                     setState(() {});
                   },
                   child: FirestorePagination(
+                    shrinkWrap: true,
                     query: storeServices.getNearbyStorePagination(),
                     initialLoader: CircularProgressIndicator(
                       valueColor: AlwaysStoppedAnimation<Color>(
@@ -138,7 +139,7 @@ class _NearByStoreState extends State<NearByStore> {
                                   ),
                                   const SizedBox(height: 3),
                                   Text(
-                                    "${getDistance(documentSnapshot['location'])}km",
+                                    "${getDistance(documentSnapshot['location'])} km",
                                     // Access the document data
                                     overflow: TextOverflow.ellipsis,
                                     style: kStoreCardStyle,

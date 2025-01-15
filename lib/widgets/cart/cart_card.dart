@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'counter.dart';
 
 class CartCard extends StatelessWidget {
-  const CartCard({Key? key, required this.documentSnapshot}) : super(key: key);
+  const CartCard({super.key, required this.documentSnapshot});
   final DocumentSnapshot? documentSnapshot;
 
   @override
@@ -36,31 +36,29 @@ class CartCard extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Container(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(documentSnapshot?['productName']),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(documentSnapshot?['productName']),
+                      Text(
+                        documentSnapshot?['weight'],
+                        style: const TextStyle(color: Colors.grey),
+                      ),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      if (documentSnapshot?['comparedPrice'] > 0)
                         Text(
-                          documentSnapshot?['weight'],
-                          style: const TextStyle(color: Colors.grey),
+                          "Rs ${documentSnapshot?['comparedPrice'].toStringAsFixed(0)}",
+                          style: const TextStyle(
+                              decoration: TextDecoration.lineThrough,
+                              fontSize: 12),
                         ),
-                        const SizedBox(
-                          height: 30,
-                        ),
-                        if (documentSnapshot?['comparedPrice'] > 0)
-                          Text(
-                            "Rs ${documentSnapshot?['comparedPrice'].toStringAsFixed(0)}",
-                            style: const TextStyle(
-                                decoration: TextDecoration.lineThrough,
-                                fontSize: 12),
-                          ),
-                        Text(
-                          "Rs ${documentSnapshot?['price'].toStringAsFixed(0)}",
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
+                      Text(
+                        "Rs ${documentSnapshot?['price'].toStringAsFixed(0)}",
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ],
                   )
                 ],
               ),

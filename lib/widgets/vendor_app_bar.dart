@@ -9,7 +9,7 @@ import '../models/product_model.dart';
 import '../providers/store_provider.dart';
 
 class VendorAppBar extends StatefulWidget {
-  const VendorAppBar({Key? key}) : super(key: key);
+  const VendorAppBar({super.key});
 
   @override
   State<VendorAppBar> createState() => _VendorAppBarState();
@@ -77,121 +77,134 @@ class _VendorAppBarState extends State<VendorAppBar> {
     // }
 
     return SliverAppBar(
+      backgroundColor: Theme.of(context).primaryColor,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(20),
+          bottomRight: Radius.circular(20),
+        ),
+      ),
       floating: true,
       snap: true,
-      expandedHeight: 260,
-      flexibleSpace: SizedBox(
-        child: Padding(
-          padding: const EdgeInsets.only(top: 110),
-          child: Card(
-            child: Padding(
-              padding: const EdgeInsets.all(3.0),
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(4),
-                    image: DecorationImage(
-                        fit: BoxFit.cover,
-                        image: NetworkImage(store.storeDetails?['imageUrl']))),
-                child: Container(
-                    color: Colors.grey.withOpacity(0.7),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ListView(
-                        padding: EdgeInsets.zero,
-                        children: [
-                          Text(
-                            store.storeDetails?['dialog'],
-                            style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20),
-                          ),
-                          Text(
-                            store.storeDetails?['email'],
-                            style: const TextStyle(
-                                color: Colors.white, fontSize: 15),
-                          ),
-                          Text(
-                            store.storeDetails?['address'],
-                            style: const TextStyle(
-                                color: Colors.white, fontSize: 15),
-                          ),
-                          Text(
-                            "Distance: ${store.distance} km",
-                            style: const TextStyle(
-                                color: Colors.white, fontSize: 15),
-                          ),
-                          const SizedBox(
-                            height: 6,
-                          ),
-                          Row(
-                            children: const [
-                              Icon(
-                                Icons.star,
-                                color: Colors.white,
-                              ),
-                              Icon(
-                                Icons.star,
-                                color: Colors.white,
-                              ),
-                              Icon(
-                                Icons.star,
-                                color: Colors.white,
-                              ),
-                              Icon(
-                                Icons.star_half,
-                                color: Colors.white,
-                              ),
-                              Icon(
-                                Icons.star_outline,
-                                color: Colors.white,
-                              ),
-                              SizedBox(
-                                width: 5,
-                              ),
-                              Text(
-                                "(3.5)",
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              CircleAvatar(
-                                backgroundColor: Colors.white,
-                                child: IconButton(
-                                  icon: Icon(
-                                    Icons.phone,
-                                    color: Theme.of(context).primaryColor,
-                                  ),
-                                  onPressed: () {
-                                    // _callNumber(store.storeDetails?['mobile']);
-                                  },
-                                ),
-                              ),
-                              const SizedBox(
-                                width: 5,
-                              ),
-                              CircleAvatar(
-                                backgroundColor: Colors.white,
-                                child: IconButton(
-                                  icon: Icon(
-                                    Icons.map,
-                                    color: Theme.of(context).primaryColor,
-                                  ),
-                                  onPressed: () {
-                                    mapLauncher();
-                                  },
-                                ),
-                              ),
-                            ],
-                          )
-                        ],
-                      ),
-                    )),
+      expandedHeight: 300,
+      flexibleSpace: Padding(
+        padding:
+            const EdgeInsets.only(top: 90, bottom: 10, left: 10, right: 10),
+        child: Card(
+          child: Padding(
+            padding: const EdgeInsets.all(3.0),
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                image: DecorationImage(
+                  fit: BoxFit.cover,
+                  image: NetworkImage(
+                    store.storeDetails?['imageUrl'],
+                  ),
+                ),
               ),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey.withOpacity(0.6),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ListView(
+                      padding: EdgeInsets.zero,
+                      children: [
+                        Text(
+                          store.storeDetails?['dialog'],
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20),
+                        ),
+                        Text(
+                          store.storeDetails?['email'],
+                          style: const TextStyle(
+                              color: Colors.white, fontSize: 15),
+                        ),
+                        Text(
+                          store.storeDetails?['address'],
+                          style: const TextStyle(
+                              color: Colors.white, fontSize: 15),
+                        ),
+                        Text(
+                          "Distance: ${store.distance} km",
+                          style: const TextStyle(
+                              color: Colors.white, fontSize: 15),
+                        ),
+                        const SizedBox(
+                          height: 6,
+                        ),
+                        Row(
+                          children: const [
+                            Icon(
+                              Icons.star,
+                              color: Colors.white,
+                            ),
+                            Icon(
+                              Icons.star,
+                              color: Colors.white,
+                            ),
+                            Icon(
+                              Icons.star,
+                              color: Colors.white,
+                            ),
+                            Icon(
+                              Icons.star_half,
+                              color: Colors.white,
+                            ),
+                            Icon(
+                              Icons.star_outline,
+                              color: Colors.white,
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Text(
+                              "(3.5)",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            CircleAvatar(
+                              backgroundColor: Colors.white,
+                              child: IconButton(
+                                icon: Icon(
+                                  Icons.phone,
+                                  color: Theme.of(context).primaryColor,
+                                ),
+                                onPressed: () {
+                                  // _callNumber(store.storeDetails?['mobile']);
+                                },
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 5,
+                            ),
+                            CircleAvatar(
+                              backgroundColor: Colors.white,
+                              child: IconButton(
+                                icon: Icon(
+                                  Icons.map,
+                                  color: Theme.of(context).primaryColor,
+                                ),
+                                onPressed: () {
+                                  mapLauncher();
+                                },
+                              ),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  )),
             ),
           ),
         ),
@@ -237,7 +250,8 @@ class _VendorAppBarState extends State<VendorAppBar> {
       ],
       title: Text(
         store.storeDetails!['shopName'],
-        style: const TextStyle(fontWeight: FontWeight.bold),
+        style:
+            const TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
       ),
     );
   }

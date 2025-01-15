@@ -100,7 +100,10 @@ class MyApp extends StatelessWidget {
       },
       builder: EasyLoading.init(),
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(primarySwatch: Colors.deepPurple, fontFamily: 'Lato'),
+      theme: ThemeData(
+        primarySwatch: Colors.deepPurple,
+        fontFamily: 'Lato',
+      ),
     );
   }
 }

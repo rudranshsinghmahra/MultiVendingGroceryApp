@@ -42,6 +42,7 @@ class _MyAppBarState extends State<MyAppBar> {
   Widget build(BuildContext context) {
     final locationData = Provider.of<LocationProvider>(context);
     return SliverAppBar(
+      backgroundColor: Theme.of(context).primaryColor,
       expandedHeight: 150,
       automaticallyImplyLeading: true,
       elevation: 0.0,
@@ -68,6 +69,7 @@ class _MyAppBarState extends State<MyAppBar> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -77,7 +79,7 @@ class _MyAppBarState extends State<MyAppBar> {
                     padding: const EdgeInsets.only(top: 20),
                     child: Text(
                       _location ?? "Set Delivery Address",
-                      style: const TextStyle(color: Colors.white, fontSize: 18),
+                      style: TextStyle(color: Colors.white, fontSize: 15),
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
@@ -98,7 +100,7 @@ class _MyAppBarState extends State<MyAppBar> {
               child: Text(
                 _address == null ? "Please set Delivery Location" : "$_address",
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(color: Colors.white, fontSize: 18),
+                style: TextStyle(color: Colors.white70, fontSize: 12),
               ),
             )
           ],

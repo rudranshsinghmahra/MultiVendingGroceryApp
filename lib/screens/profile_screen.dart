@@ -12,7 +12,7 @@ import 'map_screen.dart';
 import 'my_orders_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
+  const ProfileScreen({super.key});
   static const String id = 'profile-screen';
 
   @override
@@ -23,6 +23,7 @@ class ProfileScreen extends StatelessWidget {
     User? user = FirebaseAuth.instance.currentUser;
     return Scaffold(
         appBar: AppBar(
+          backgroundColor: Theme.of(context).primaryColor,
           elevation: 0.0,
           centerTitle: true,
           iconTheme: const IconThemeData(color: Colors.white),

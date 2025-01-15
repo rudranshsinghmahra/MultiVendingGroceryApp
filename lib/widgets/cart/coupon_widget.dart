@@ -33,13 +33,16 @@ class _CouponWidgetState extends State<CouponWidget> {
               child: Row(
                 children: [
                   Expanded(
-                    child: SizedBox(
-                      height: 36,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
                       child: TextField(
                         controller: couponController,
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           hintText: "Enter Voucher Code",
+                          hintStyle: TextStyle(
+                            fontSize: 12
+                          ),
                           filled: true,
                           fillColor: Colors.grey[300],
                         ),
@@ -60,47 +63,50 @@ class _CouponWidgetState extends State<CouponWidget> {
                   ),
                   AbsorbPointer(
                     absorbing: _enable ? false : true,
-                    child: OutlinedButton(
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(_color),
-                      ),
-                      onPressed: () {
-                        EasyLoading.show(status: "Validating Coupon...");
-                        _coupon
-                            .getCouponDetails(
-                                couponController.text, widget.couponVendor)
-                            .then((value) {
-                          if (_coupon.documentSnapshot == null) {
-                            setState(() {
-                              _coupon.discountRate = 0;
-                              _isVisible = false;
-                            });
-                            EasyLoading.dismiss();
-                            showAlertMessage(
-                                couponController.text, "Not Valid");
-                            return;
-                          }
-                          if (_coupon.expired == false) {
-                            //not expired, coupon is valid
-                            setState(() {
-                              _isVisible = true;
-                            });
-                            EasyLoading.dismiss();
-                            return;
-                          }
-                          if (_coupon.expired == false) {
-                            //not expired, coupon is valid
-                            setState(() {
-                              _isVisible = true;
-                            });
-                            EasyLoading.dismiss();
-                            showAlertMessage(couponController.text, "Expired");
-                          }
-                        });
-                      },
-                      child: const Text(
-                        "Apply",
-                        style: TextStyle(color: Colors.white),
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: OutlinedButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(_color),
+                        ),
+                        onPressed: () {
+                          EasyLoading.show(status: "Validating Coupon...");
+                          _coupon
+                              .getCouponDetails(
+                                  couponController.text, widget.couponVendor)
+                              .then((value) {
+                            if (_coupon.documentSnapshot == null) {
+                              setState(() {
+                                _coupon.discountRate = 0;
+                                _isVisible = false;
+                              });
+                              EasyLoading.dismiss();
+                              showAlertMessage(
+                                  couponController.text, "Not Valid");
+                              return;
+                            }
+                            if (_coupon.expired == false) {
+                              //not expired, coupon is valid
+                              setState(() {
+                                _isVisible = true;
+                              });
+                              EasyLoading.dismiss();
+                              return;
+                            }
+                            if (_coupon.expired == false) {
+                              //not expired, coupon is valid
+                              setState(() {
+                                _isVisible = true;
+                              });
+                              EasyLoading.dismiss();
+                              showAlertMessage(couponController.text, "Expired");
+                            }
+                          });
+                        },
+                        child: const Text(
+                          "Apply",
+                          style: TextStyle(color: Colors.white),
+                        ),
                       ),
                     ),
                   )

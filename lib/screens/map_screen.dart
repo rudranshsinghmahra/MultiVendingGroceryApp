@@ -176,7 +176,7 @@ class _MapScreenState extends State<MapScreen> {
                                     });
                                   }
                                 },
-                                child: const Text("Confirm Location"),
+                                child: const Text("Confirm Location",style: TextStyle(color: Colors.white),),
                               ),
                             ),
                           )

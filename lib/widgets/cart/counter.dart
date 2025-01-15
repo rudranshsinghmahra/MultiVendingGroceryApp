@@ -3,12 +3,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:provider/provider.dart';
 
+import '../../providers/cart_provider.dart';
 import '../../services/cart_services.dart';
 
 class CounterForCard extends StatefulWidget {
-  const CounterForCard({Key? key, required this.documentSnapshot})
-      : super(key: key);
+  const CounterForCard({super.key, required this.documentSnapshot});
+
   final DocumentSnapshot? documentSnapshot;
 
   @override
@@ -62,6 +64,7 @@ class _CounterForCardState extends State<CounterForCard> {
 
   @override
   Widget build(BuildContext context) {
+    var cartProvider = Provider.of<CartProvider>(context);
     return _exists
         ? StreamBuilder(
             stream: getCartData(),
@@ -172,16 +175,14 @@ class _CounterForCardState extends State<CounterForCard> {
         : StreamBuilder(
             stream: getCartData(),
             builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-              return Container(
-                height: 28,
-                decoration: BoxDecoration(
-                  color: Colors.pink,
-                  borderRadius: BorderRadius.circular(4),
-                ),
-                child: Center(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      EasyLoading.show(status: "Adding to Cart");
+              return Center(
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.pink,
+                  ),
+                  onPressed: () {
+                    EasyLoading.show(status: "Adding to Cart");
+                    if(cartProvider.cartQty > 0){
                       cartServices.checkSeller().then((shopName) {
                         if (shopName ==
                             widget.documentSnapshot?['seller']['sellerUid']) {
@@ -196,9 +197,7 @@ class _CounterForCardState extends State<CounterForCard> {
                           });
                           return;
                         } else if (shopName !=
-                                widget.documentSnapshot?['seller']
-                                    ['shopName'] &&
-                            shopName != null) {
+                            widget.documentSnapshot?['seller']['shopName']) {
                           //Product is from different seller
                           EasyLoading.dismiss();
                           showDialogBox(shopName);
@@ -214,11 +213,17 @@ class _CounterForCardState extends State<CounterForCard> {
                           return;
                         }
                       });
-                    },
-                    child: const Text(
-                      'Add',
-                      style: TextStyle(color: Colors.white),
-                    ),
+                    }else{
+                      cartServices
+                          .addToCart(widget.documentSnapshot)
+                          .then((value) {
+                        EasyLoading.showSuccess("Added to Cart");
+                      });
+                    }
+                  },
+                  child: const Text(
+                    'Add',
+                    style: TextStyle(color: Colors.white),
                   ),
                 ),
               );
@@ -238,6 +243,9 @@ class _CounterForCardState extends State<CounterForCard> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red,
+                ),
                 onPressed: () {
                   Navigator.pop(context);
                 },
@@ -251,6 +259,9 @@ class _CounterForCardState extends State<CounterForCard> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                ),
                 onPressed: () {
                   cartServices.deleteCart().then((value) {
                     cartServices

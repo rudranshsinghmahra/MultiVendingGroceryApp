@@ -7,6 +7,7 @@ import '../cart/counter.dart';
 
 class ProductCard extends StatelessWidget {
   const ProductCard({super.key, required this.documentSnapshot});
+
   final DocumentSnapshot documentSnapshot;
 
   @override
@@ -17,10 +18,16 @@ class ProductCard extends StatelessWidget {
                 100)
             .toStringAsFixed(0);
     return Container(
-      height: 160,
+      height: 180,
       width: MediaQuery.of(context).size.width,
       decoration: const BoxDecoration(
-          border: Border(bottom: BorderSide(width: 1, color: Colors.grey))),
+        border: Border(
+          bottom: BorderSide(
+            width: 1,
+            color: Colors.grey,
+          ),
+        ),
+      ),
       child: Padding(
         padding: const EdgeInsets.only(top: 8, bottom: 8, left: 10, right: 10),
         child: Row(

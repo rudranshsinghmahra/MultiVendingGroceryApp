@@ -45,7 +45,7 @@ class _CartScreenState extends State<CartScreen> {
   double discount = 0.0;
   var deliveryFee = 50.0;
   bool _loading = false;
-  bool _checkingUser = false;
+  bool checkingUser = false;
 
   String? location = "";
   String? address = "";
@@ -89,11 +89,11 @@ class _CartScreenState extends State<CartScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.grey[300],
-      bottomSheet: userDetails.documentSnapshot == null
+      bottomNavigationBar: userDetails.documentSnapshot == null
           ? Container()
           : Container(
               height: 160,
-              color: Colors.blueGrey[900],
+              color: Colors.blueGrey[600],
               child: Column(
                 children: [
                   Container(
@@ -169,7 +169,7 @@ class _CartScreenState extends State<CartScreen> {
                   ),
                   Center(
                     child: Padding(
-                      padding: const EdgeInsets.only(left: 20, right: 20),
+                      padding: const EdgeInsets.only(left: 20, right: 20,top: 5),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -237,9 +237,9 @@ class _CartScreenState extends State<CartScreen> {
                             style: ButtonStyle(
                                 backgroundColor: MaterialStateProperty.all(
                                     Colors.redAccent)),
-                            child: _checkingUser
+                            child: checkingUser
                                 ? const CircularProgressIndicator()
-                                : const Text("CHECKOUT"),
+                                : const Text("CHECKOUT",style: TextStyle(color: Colors.white),),
                           )
                         ],
                       ),

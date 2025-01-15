@@ -25,18 +25,16 @@ class LocationProvider extends ChangeNotifier {
       showAlert("Location Permission is Denied Forever. Enable in Settings");
     } else {
       position = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.high);
-      if (position != null) {
-        permissionAllowed = true;
-        notifyListeners();
-        latitude = position.latitude;
-        longitude = position.longitude;
+        locationSettings: LocationSettings(accuracy: LocationAccuracy.high),
+      );
+      permissionAllowed = true;
+      notifyListeners();
+      latitude = position.latitude;
+      longitude = position.longitude;
 
-        List<geocoding.Placemark> placemarks = await geocoding.placemarkFromCoordinates(latitude, longitude);
-        selectedAddress = placemarks.first;
-      } else {
-        print("Permissions Not Allowed");
-      }
+      List<geocoding.Placemark> placemarks =
+          await geocoding.placemarkFromCoordinates(latitude, longitude);
+      selectedAddress = placemarks.first;
     }
     return position;
   }
@@ -48,7 +46,8 @@ class LocationProvider extends ChangeNotifier {
   }
 
   Future<void> getMoveCamera() async {
-    List<geocoding.Placemark> placemarks = await geocoding.placemarkFromCoordinates(latitude, longitude);
+    List<geocoding.Placemark> placemarks =
+        await geocoding.placemarkFromCoordinates(latitude, longitude);
     selectedAddress = placemarks.first;
     notifyListeners();
     print("${selectedAddress?.name} : ${selectedAddress?.street}");

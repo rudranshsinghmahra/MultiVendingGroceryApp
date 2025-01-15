@@ -8,7 +8,7 @@ import '../../screens/cart_screen.dart';
 import '../../services/cart_services.dart';
 
 class CartNotification extends StatefulWidget {
-  const CartNotification({Key? key}) : super(key: key);
+  const CartNotification({super.key});
 
   @override
   State<CartNotification> createState() => _CartNotificationState();
@@ -20,13 +20,12 @@ class _CartNotificationState extends State<CartNotification> {
 
   @override
   Widget build(BuildContext context) {
-    final _cartProvider = Provider.of<CartProvider>(context);
-    _cartProvider.getCartTotal();
-    _cartProvider.getShopName();
-
+    final cartProvider = Provider.of<CartProvider>(context);
+    cartProvider.getCartTotal();
+    cartProvider.getShopName();
     return Visibility(
-      visible: _cartProvider.distance <= 10
-          ? _cartProvider.cartQty > 0
+      visible: cartProvider.distance <= 10
+          ? cartProvider.cartQty > 0
               ? true
               : false
           : false,
@@ -53,7 +52,7 @@ class _CartNotificationState extends State<CartNotification> {
                     Row(
                       children: [
                         Text(
-                          "${_cartProvider.cartQty} ${_cartProvider.cartQty > 1 ? "Items" : "Item"}",
+                          "${cartProvider.cartQty} ${cartProvider.cartQty > 1 ? "Items" : "Item"}",
                           style: const TextStyle(
                               fontSize: 14, color: Colors.white),
                         ),
@@ -62,15 +61,15 @@ class _CartNotificationState extends State<CartNotification> {
                           style: TextStyle(color: Colors.white),
                         ),
                         Text(
-                          _cartProvider.subTotal.toStringAsFixed(0),
+                          cartProvider.subTotal.toStringAsFixed(0),
                           style: const TextStyle(
                               fontSize: 14, color: Colors.white),
                         ),
                       ],
                     ),
-                    if (_cartProvider.documentSnapshot != null)
+                    if (cartProvider.documentSnapshot != null)
                       Text(
-                        "From ${_cartProvider.documentSnapshot?['shopName']}",
+                        "From ${cartProvider.documentSnapshot?['shopName']}",
                         style:
                             const TextStyle(color: Colors.white, fontSize: 12),
                       )
@@ -83,7 +82,7 @@ class _CartNotificationState extends State<CartNotification> {
                     context,
                     settings: const RouteSettings(name: CartScreen.id),
                     screen: CartScreen(
-                      documentSnapshot: _cartProvider.documentSnapshot,
+                      documentSnapshot: cartProvider.documentSnapshot,
                     ),
                     withNavBar: true,
                     pageTransitionAnimation: PageTransitionAnimation.cupertino,

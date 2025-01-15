@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:multi_vending_grocery_app/providers/cart_provider.dart';
 import 'package:multi_vending_grocery_app/widgets/products/product_card_widget.dart';
 import 'package:provider/provider.dart';
 
@@ -13,6 +14,7 @@ class RecentlyAddedProducts extends StatelessWidget {
   Widget build(BuildContext context) {
     ProductServices services = ProductServices();
     var storeProvider = Provider.of<StoreProvider>(context);
+    var cartProvider = Provider.of<CartProvider>(context);
 
     return FutureBuilder<QuerySnapshot>(
         future: services.products
@@ -30,45 +32,50 @@ class RecentlyAddedProducts extends StatelessWidget {
           }
           return Column(
             children: [
-              if(snapshot.data.docs.length>0)
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Material(
-                  elevation: 4,
-                  borderRadius: BorderRadius.circular(4),
-                  child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    child: Center(
-                      child: Text(
-                        "Recently Added Products",
-                        style: TextStyle(
-                            shadows: [
-                              Shadow(
-                                  offset: Offset(2.0, 2.0),
-                                  blurRadius: 3.0,
-                                  color: Colors.black)
-                            ],
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 30),
-                        textAlign: TextAlign.center,
+              if (snapshot.data.docs.length > 0)
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Material(
+                    elevation: 4,
+                    borderRadius: BorderRadius.circular(4),
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      decoration: BoxDecoration(
+                          color: Colors.teal[100],
+                          borderRadius: BorderRadius.circular(4)),
+                      height: 95,
+                      child: Center(
+                        child: Text(
+                          "Recently Added Products",
+                          style: TextStyle(
+                              shadows: [
+                                Shadow(
+                                    offset: Offset(2.0, 2.0),
+                                    blurRadius: 3.0,
+                                    color: Colors.black)
+                              ],
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 30),
+                          textAlign: TextAlign.center,
+                        ),
                       ),
                     ),
-                    decoration: BoxDecoration(
-                        color: Colors.teal[100],
-                        borderRadius: BorderRadius.circular(4)),
-                    height: 56,
                   ),
                 ),
-              ),
-              ListView(
-                padding: EdgeInsets.zero,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                children:
-                    snapshot.data.docs.map<Widget>((DocumentSnapshot document) {
-                  return ProductCard(documentSnapshot: document);
-                }).toList(),
+              Padding(
+                padding: cartProvider.cartQty > 0
+                    ? EdgeInsets.only(bottom: 50.0)
+                    : EdgeInsets.zero,
+                child: ListView(
+                  padding: EdgeInsets.zero,
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  children: snapshot.data.docs
+                      .map<Widget>((DocumentSnapshot document) {
+                    return ProductCard(documentSnapshot: document);
+                  }).toList(),
+                ),
               )
             ],
           );
