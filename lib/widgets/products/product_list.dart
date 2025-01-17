@@ -7,21 +7,21 @@ import '../../providers/store_provider.dart';
 import '../../services/product_services.dart';
 
 class ProductListWidget extends StatelessWidget {
-  const ProductListWidget({Key? key}) : super(key: key);
+  const ProductListWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    ProductServices _services = ProductServices();
-    var _storeProvider = Provider.of<StoreProvider>(context);
+    ProductServices services = ProductServices();
+    var storeProvider = Provider.of<StoreProvider>(context);
 
     return FutureBuilder<QuerySnapshot>(
-      future: _services.products
+      future: services.products
           .where('published', isEqualTo: true)
           .where('categoryName.mainCategory',
-              isEqualTo: _storeProvider.selectedProductCategory)
-          .where('categoryName.subCategory', isEqualTo: _storeProvider.selectedSubCategory)
+              isEqualTo: storeProvider.selectedProductCategory)
+          .where('categoryName.subCategory', isEqualTo: storeProvider.selectedSubCategory)
           .where('seller.sellerUid',
-              isEqualTo: _storeProvider.storeDetails?['uid'])
+              isEqualTo: storeProvider.storeDetails?['uid'])
           .get(),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if (snapshot.hasError) {

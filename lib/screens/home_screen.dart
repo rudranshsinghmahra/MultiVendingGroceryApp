@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../widgets/images_slider.dart';
@@ -9,7 +8,8 @@ import '../widgets/near_by_store.dart';
 import '../widgets/top_picked_store.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({super.key});
+
   static const String id = 'home-screen';
 
   @override
@@ -18,6 +18,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   String? location = "";
+
   @override
   void initState() {
     getPreferences();

@@ -6,8 +6,7 @@ import '../products/add_to_cart_widget.dart';
 
 class CounterWidget extends StatefulWidget {
   const CounterWidget(
-      {Key? key, this.documentSnapshot, required this.qty, required this.docId})
-      : super(key: key);
+      {super.key, this.documentSnapshot, required this.qty, required this.docId});
   final DocumentSnapshot? documentSnapshot;
   final int qty;
   final String docId;

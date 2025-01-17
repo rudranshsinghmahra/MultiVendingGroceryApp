@@ -43,7 +43,7 @@ class ProfileScreen extends StatelessWidget {
                         Stack(
                           children: [
                             Container(
-                              color: Colors.redAccent,
+                              color: Colors.deepPurple.shade300,
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Column(

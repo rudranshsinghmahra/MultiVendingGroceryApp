@@ -65,8 +65,8 @@ class RecentlyAddedProducts extends StatelessWidget {
                 ),
               Padding(
                 padding: cartProvider.cartQty > 0
-                    ? EdgeInsets.only(bottom: 50.0)
-                    : EdgeInsets.zero,
+                    ? EdgeInsets.only(bottom: 100.0)
+                    : EdgeInsets.only(bottom: 50.0),
                 child: ListView(
                   padding: EdgeInsets.zero,
                   shrinkWrap: true,

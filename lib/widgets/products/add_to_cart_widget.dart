@@ -8,7 +8,8 @@ import '../../services/cart_services.dart';
 import '../cart/counter_widget.dart';
 
 class AddToCardWidget extends StatefulWidget {
-  const AddToCardWidget({Key? key, this.documentSnapshot}) : super(key: key);
+  const AddToCardWidget({super.key, this.documentSnapshot});
+
   final DocumentSnapshot? documentSnapshot;
 
   @override
@@ -53,7 +54,7 @@ class _AddToCardWidgetState extends State<AddToCardWidget> {
         .where('productId', isEqualTo: widget.documentSnapshot?['productId'])
         .get()
         .then((QuerySnapshot querySnapshot) {
-      querySnapshot.docs.forEach((doc) {
+      for (var doc in querySnapshot.docs) {
         if (doc['productId'] == widget.documentSnapshot?['productId']) {
           setState(() {
             exists = true;
@@ -61,7 +62,7 @@ class _AddToCardWidgetState extends State<AddToCardWidget> {
             _docId = doc.id;
           });
         }
-      });
+      }
     });
 
     return isLoading
@@ -97,25 +98,27 @@ class _AddToCardWidgetState extends State<AddToCardWidget> {
                   color: Colors.red[400],
                   child: Center(
                     child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
-                            Icon(
-                              CupertinoIcons.shopping_cart,
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const [
+                          Icon(
+                            CupertinoIcons.shopping_cart,
+                            color: Colors.white,
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Text(
+                            "Add to Basket",
+                            style: TextStyle(
                               color: Colors.white,
+                              fontWeight: FontWeight.bold,
                             ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Text(
-                              "Add to Basket",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        )),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
               );

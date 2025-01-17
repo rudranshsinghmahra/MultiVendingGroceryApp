@@ -5,7 +5,7 @@ import '../../providers/store_provider.dart';
 import '../../services/product_services.dart';
 
 class ProductFilterWidget extends StatefulWidget {
-  const ProductFilterWidget({Key? key}) : super(key: key);
+  const ProductFilterWidget({super.key});
 
   @override
   State<ProductFilterWidget> createState() => _ProductFilterWidgetState();

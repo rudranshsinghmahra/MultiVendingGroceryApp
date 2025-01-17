@@ -9,15 +9,15 @@ import 'home_screen.dart';
 import 'my_orders_screen.dart';
 
 class MainScreen extends StatelessWidget {
-  const MainScreen({Key? key}) : super(key: key);
+  const MainScreen({super.key});
   static const String id = 'main-screen-page';
 
   @override
   Widget build(BuildContext context) {
-    PersistentTabController _controller;
-    _controller = PersistentTabController(initialIndex: 0);
+    PersistentTabController controller;
+    controller = PersistentTabController(initialIndex: 0);
 
-    List<Widget> _buildScreens() {
+    List<Widget> buildScreens() {
       return [
         const HomeScreen(),
         const FavouriteScreen(),
@@ -26,7 +26,7 @@ class MainScreen extends StatelessWidget {
       ];
     }
 
-    List<PersistentBottomNavBarItem> _navBarsItems() {
+    List<PersistentBottomNavBarItem> navBarsItems() {
       return [
         PersistentBottomNavBarItem(
           icon: Image.asset('assets/logo.png'),
@@ -64,20 +64,19 @@ class MainScreen extends StatelessWidget {
       body: PersistentTabView(
         context,
         navBarHeight: 56,
-        controller: _controller,
-        screens: _buildScreens(),
-        items: _navBarsItems(),
-        confineToSafeArea: true,
+        controller: controller,
+        screens: buildScreens(),
+        items: navBarsItems(),
+        confineToSafeArea:true,
         backgroundColor: Colors.white,
         handleAndroidBackButtonPress: true,
         resizeToAvoidBottomInset: true,
         stateManagement: true,
         hideNavigationBarWhenKeyboardAppears: true,
+        bottomScreenMargin: 0,
         decoration: NavBarDecoration(
-            borderRadius: BorderRadius.circular(0.0),
             colorBehindNavBar: Colors.white,
             border: Border.all(color: Colors.black54)),
-
         // popAllScreensOnTapOfSelectedTab: true,
         popBehaviorOnSelectedNavBarItemPress: PopBehavior.all,
         // animationSettings: const ItemAnimationProperties(

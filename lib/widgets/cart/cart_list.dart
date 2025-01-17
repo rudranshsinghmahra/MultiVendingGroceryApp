@@ -5,7 +5,7 @@ import '../../services/cart_services.dart';
 import 'cart_card.dart';
 
 class CartList extends StatefulWidget {
-  const CartList({Key? key, this.documentSnapshot}) : super(key: key);
+  const CartList({super.key, this.documentSnapshot});
   final DocumentSnapshot? documentSnapshot;
 
   @override

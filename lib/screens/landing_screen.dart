@@ -4,7 +4,7 @@ import '../providers/location_provider.dart';
 import 'map_screen.dart';
 
 class LandingScreen extends StatefulWidget {
-  const LandingScreen({Key? key}) : super(key: key);
+  const LandingScreen({super.key});
   static const id = "landing-screen";
 
   @override

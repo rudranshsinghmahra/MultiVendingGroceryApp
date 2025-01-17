@@ -61,7 +61,7 @@ Future<void> main() async {
         ),
         ChangeNotifierProvider(
           create: (_) => OrderProvider(),
-        )
+        ),
       ],
       child: const MyApp(),
     ),

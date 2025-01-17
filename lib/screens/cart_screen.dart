@@ -81,9 +81,11 @@ class _CartScreenState extends State<CartScreen> {
     userDetails.getUserDetails().then((value) {
       double subTotal = cartProvider.subTotal;
       double discountRate = couponProvider.discountRate / 100;
+    if(mounted){
       setState(() {
         discount = subTotal * discountRate;
       });
+    }
     });
     final orderProvider = Provider.of<OrderProvider>(context);
     return Scaffold(
@@ -249,7 +251,7 @@ class _CartScreenState extends State<CartScreen> {
               ),
             ),
       body: NestedScrollView(
-        headerSliverBuilder: (BuildContext context, bool innerBozIsSxrolled) {
+        headerSliverBuilder: (BuildContext context, bool innerBozIsSxRolled) {
           return [
             SliverAppBar(
               iconTheme: const IconThemeData.fallback(),

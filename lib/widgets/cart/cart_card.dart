@@ -29,7 +29,7 @@ class CartCard extends StatelessWidget {
                     padding: const EdgeInsets.only(left: 8.0, right: 8.0),
                     child: SizedBox(
                       height: 90,
-                      width: 80,
+                      width: 100,
                       child: Image.network(
                         documentSnapshot?['productImage'],
                         fit: BoxFit.fill,
