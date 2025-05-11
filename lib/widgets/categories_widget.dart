@@ -1,47 +1,53 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';  // <-- Add shimmer
 
 import '../providers/store_provider.dart';
-import '../screens/product_list_screen.dart';
 import '../services/product_services.dart';
+import '../screens/product_list_screen.dart';
 
 class VendorCategories extends StatefulWidget {
-  const VendorCategories({Key? key}) : super(key: key);
+  const VendorCategories({super.key});
 
   @override
   State<VendorCategories> createState() => _VendorCategoriesState();
 }
 
 class _VendorCategoriesState extends State<VendorCategories> {
-  ProductServices productServices = ProductServices();
+  final ProductServices productServices = ProductServices();
+  List<String> categoriesList = [];
 
-  List _categoriesList = [];
+  // Use a Future to load categories efficiently
+  Future<void> loadCategories() async {
+    var store = Provider.of<StoreProvider>(context, listen: false);
+    // Fetch unique categories once using a distinct query to avoid fetching all products
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('products')
+        .where('seller.sellerUid', isEqualTo: store.storeDetails?['uid'])
+        .get();
+
+    Set<String> categorySet = {}; // Set to ensure unique categories
+
+    for (var doc in querySnapshot.docs) {
+      categorySet.add(doc['categoryName']['mainCategory']);
+    }
+
+    setState(() {
+      categoriesList = categorySet.toList(); // Convert set to list
+    });
+  }
 
   @override
-  void didChangeDependencies() {
-    var _store = Provider.of<StoreProvider>(context);
-
-    FirebaseFirestore.instance
-        .collection('products')
-        .where('seller.sellerUid', isEqualTo: _store.storeDetails?['uid'])
-        .get()
-        .then((QuerySnapshot querySnapshot) {
-      querySnapshot.docs.forEach((element) {
-        setState(() {
-          _categoriesList.add(element['categoryName']['mainCategory']);
-          print(element['categoryName']['mainCategory']);
-        });
-      });
-    });
-
-    super.didChangeDependencies();
+  void initState() {
+    super.initState();
+    loadCategories(); // Load categories on widget initialization
   }
 
   @override
   Widget build(BuildContext context) {
-    var _services = Provider.of<StoreProvider>(context);
+    var services = Provider.of<StoreProvider>(context);
 
     return FutureBuilder(
       future: productServices.category.get(),
@@ -51,12 +57,75 @@ class _VendorCategoriesState extends State<VendorCategories> {
             child: Text("Something Went Wrong"),
           );
         }
-        if (_categoriesList.isEmpty) {
-          return Container();
+
+        if (categoriesList.isEmpty) {
+          // Show shimmer effect while categories are loading
+          return SingleChildScrollView(
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Material(
+                    elevation: 4,
+                    borderRadius: BorderRadius.circular(6),
+                    child: Container(
+                      height: 60,
+                      width: MediaQuery.of(context).size.width,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(6),
+                        image: const DecorationImage(
+                            fit: BoxFit.cover,
+                            image: AssetImage('assets/city.png')),
+                      ),
+                      child: const Text(
+                        "Shop by Category",
+                        style: TextStyle(
+                            shadows: [
+                              Shadow(
+                                  offset: Offset(2.0, 2.0),
+                                  blurRadius: 3.0,
+                                  color: Colors.black)
+                            ],
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 30),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                // Shimmer effect for category items
+                Shimmer.fromColors(
+                  baseColor: Colors.grey.shade300,
+                  highlightColor: Colors.grey.shade100,
+                  child: Wrap(
+                    direction: Axis.horizontal,
+                    children: List.generate(2, (index) {
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          width: 120,
+                          height: 180,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              color: Colors.white),
+                        ),
+                      );
+                    }),
+                  ),
+                ),
+              ],
+            ),
+          );
         }
+
         if (!snapshot.hasData) {
-          return Container();
+          return const Center(child: Text("No Categories Available"));
         }
+
         return SingleChildScrollView(
           child: Column(
             children: [
@@ -97,59 +166,51 @@ class _VendorCategoriesState extends State<VendorCategories> {
               Wrap(
                 direction: Axis.horizontal,
                 children: snapshot.data!.docs.map((DocumentSnapshot document) {
-                  return _categoriesList.contains(document['name'])
+                  return categoriesList.contains(document['name'])
                       ? Padding(
-                          padding: const EdgeInsets.all(3.5),
-                          child: Container(
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15)),
-                            width: 120,
-                            height: 180,
-                            child: InkWell(
-                              onTap: () {
-                                _services.selectedCategory(document['name']);
-                                _services.selectedCategorySub(null);
-                                PersistentNavBarNavigator
-                                    .pushNewScreenWithRouteSettings(
-                                  context,
-                                  settings: const RouteSettings(
-                                      name: ProductListScreen.id),
-                                  screen: const ProductListScreen(),
-                                  withNavBar: false,
-                                  pageTransitionAnimation:
-                                      PageTransitionAnimation.cupertino,
-                                );
-                              },
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(15),
-                                    border: Border.all(
-                                        color: Colors.grey, width: 1.5)),
-                                child: Column(
-                                  children: [
-                                    Center(
-                                      child: Container(
-                                        padding: const EdgeInsets.all(3),
-                                        height: 120,
-                                        child:
-                                            Image.network(document['images']),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 8, right: 8),
-                                      child: Text(
-                                        document['name'],
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    )
-                                  ],
+                    padding: const EdgeInsets.all(3.5),
+                    child: Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15)),
+                      width: 120,
+                      height: 180,
+                      child: InkWell(
+                        onTap: () {
+                          services.selectedCategory(document['name']);
+                          services.selectedCategorySub(null);
+                          pushScreen(context,
+                              screen: ProductListScreen());
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              border: Border.all(
+                                  color: Colors.grey, width: 1.5)),
+                          child: Column(
+                            children: [
+                              Center(
+                                child: Container(
+                                  padding: const EdgeInsets.all(3),
+                                  height: 120,
+                                  child:
+                                  Image.network(document['images']),
                                 ),
                               ),
-                            ),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 8, right: 8),
+                                child: Text(
+                                  document['name'],
+                                  textAlign: TextAlign.center,
+                                ),
+                              )
+                            ],
                           ),
-                        )
-                      : const Text("");
+                        ),
+                      ),
+                    ),
+                  )
+                      : const SizedBox.shrink(); // Empty widget for no match
                 }).toList(),
               ),
             ],

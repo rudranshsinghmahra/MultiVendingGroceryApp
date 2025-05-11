@@ -36,11 +36,12 @@ Future<void> main() async {
   Stripe.publishableKey =
       'pk_test_51LKyZBSBEstQDuHJU3EZBj63isas2wMmw0tHXQF9Wmze0bFhNO2q4bublyNr6dX8sAPgwfecvrE1WMxEDCHuSoTx00aiOseXH1';
   await Firebase.initializeApp(
-      options: FirebaseOptions(
-          apiKey: "AIzaSyDKNSapKXYrTKL4xD5cXSnmn5ppC8KDVgc",
-          appId: "1:147156304764:android:22900b470f4a67f9da9af9",
-          messagingSenderId: "147156304764",
-          projectId: "grocery-application-3329d"));
+    options: FirebaseOptions(
+        apiKey: "AIzaSyDKNSapKXYrTKL4xD5cXSnmn5ppC8KDVgc",
+        appId: "1:147156304764:android:22900b470f4a67f9da9af9",
+        messagingSenderId: "147156304764",
+        projectId: "grocery-application-3329d"),
+  );
   runApp(
     MultiProvider(
       providers: [

@@ -40,7 +40,7 @@ class _CounterForCardState extends State<CounterForCard> {
         .get()
         .then((QuerySnapshot querySnapshot) {
       if (querySnapshot.docs.isNotEmpty) {
-        querySnapshot.docs.forEach((doc) {
+        for (var doc in querySnapshot.docs) {
           if (doc['productId'] == widget.documentSnapshot?['productId']) {
             //This means selected product already exist in your cart, no need to add again
             if (mounted) {
@@ -51,7 +51,7 @@ class _CounterForCardState extends State<CounterForCard> {
               });
             }
           }
-        });
+        }
       } else {
         if (mounted) {
           setState(() {
@@ -182,7 +182,7 @@ class _CounterForCardState extends State<CounterForCard> {
                   ),
                   onPressed: () {
                     EasyLoading.show(status: "Adding to Cart");
-                    if(cartProvider.cartQty > 0){
+                    if (cartProvider.cartQty > 0) {
                       cartServices.checkSeller().then((shopName) {
                         if (shopName ==
                             widget.documentSnapshot?['seller']['sellerUid']) {
@@ -213,7 +213,7 @@ class _CounterForCardState extends State<CounterForCard> {
                           return;
                         }
                       });
-                    }else{
+                    } else {
                       cartServices
                           .addToCart(widget.documentSnapshot)
                           .then((value) {

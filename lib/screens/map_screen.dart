@@ -18,7 +18,7 @@ class MapScreen extends StatefulWidget {
 }
 
 class _MapScreenState extends State<MapScreen> {
-  LatLng currentLocation = const LatLng(28.529918076937708, 77.25392945998702);
+  LatLng currentLocation = const LatLng(0.0, 0.0);
   late GoogleMapController mapController;
   bool isLoading = false;
   bool loggedIn = false;

@@ -12,6 +12,7 @@ class StoreProvider extends ChangeNotifier {
   User? user = FirebaseAuth.instance.currentUser;
   var userLatitude = 0.0;
   var userLongitude = 0.0;
+
   // String? selectedStore;
   // String? selectedStoreId;
   DocumentSnapshot? storeDetails;
@@ -43,14 +44,29 @@ class StoreProvider extends ChangeNotifier {
   }
 
   Future<void> getUserLocation(context) async {
+
+    // Fetching location from Firestore
     _userServices.getUserDataById(user!.uid).then((value) {
       if (user != null) {
         userLatitude = value['latitude'];
         userLongitude = value['longitude'];
+        notifyListeners();
       } else {
         Navigator.pushReplacementNamed(context, WelcomeScreen.id);
       }
     });
+
+    // If the Firestore location is not available, then using realtime location
+    if (userLatitude == 0.0 && userLongitude == 0.0) {
+      try {
+        Position position = await determinePosition();
+        userLatitude = position.latitude;
+        userLongitude = position.longitude;
+        notifyListeners();
+      } catch (e) {
+        print("Error fetching location: $e");
+      }
+    }
   }
 
   Future<Position> determinePosition() async {

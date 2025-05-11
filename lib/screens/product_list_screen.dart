@@ -5,7 +5,7 @@ import '../widgets/products/product_filter_widget.dart';
 import '../widgets/products/product_list.dart';
 
 class ProductListScreen extends StatelessWidget {
-  const ProductListScreen({Key? key}) : super(key: key);
+  const ProductListScreen({super.key});
   static const String id = 'product-list-screen';
   @override
   Widget build(BuildContext context) {
@@ -15,6 +15,7 @@ class ProductListScreen extends StatelessWidget {
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
           return [
             SliverAppBar(
+              backgroundColor: Theme.of(context).primaryColor,
               floating: true,
               snap: true,
               title: Text(
@@ -28,7 +29,7 @@ class ProductListScreen extends StatelessWidget {
                 child: Container(
                   height: 56,
                   color: Colors.grey,
-                  child: const ProductFilterWidget(),
+                  child: ProductFilterWidget(),
                 ),
               ),
             )

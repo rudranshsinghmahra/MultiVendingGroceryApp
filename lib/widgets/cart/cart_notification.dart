@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 import 'package:provider/provider.dart';
 
 import '../../providers/cart_provider.dart';
@@ -78,14 +78,10 @@ class _CartNotificationState extends State<CartNotification> {
               ),
               InkWell(
                 onTap: () {
-                  PersistentNavBarNavigator.pushNewScreenWithRouteSettings(
+                  pushScreen(
                     context,
-                    settings: const RouteSettings(name: CartScreen.id),
                     screen: CartScreen(
-                      documentSnapshot: cartProvider.documentSnapshot,
-                    ),
-                    withNavBar: true,
-                    pageTransitionAnimation: PageTransitionAnimation.cupertino,
+                        documentSnapshot: cartProvider.documentSnapshot),
                   );
                 },
                 child: Row(

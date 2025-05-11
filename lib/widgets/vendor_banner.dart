@@ -2,11 +2,12 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shimmer/shimmer.dart';  // <-- Add shimmer
 
 import '../providers/vendorBannerController.dart';
 
 class VendorBanner extends StatefulWidget {
-  const VendorBanner({Key? key}) : super(key: key);
+  const VendorBanner({super.key});
 
   @override
   State<VendorBanner> createState() => _VendorBannerState();
@@ -65,8 +66,38 @@ class _VendorBannerState extends State<VendorBanner> {
             ],
           );
         } else {
-          return const Center(
-            child: CircularProgressIndicator(),
+          // Shimmer Effect for loading state
+          return Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 10),
+                child: Shimmer.fromColors(
+                  baseColor: Colors.grey.shade300,
+                  highlightColor: Colors.grey.shade100,
+                  child: Container(
+                    width: size.width,
+                    height: size.height * 0.23,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              // Shimmer for DotsIndicator placeholder
+              Padding(
+                padding: const EdgeInsets.only(top: 10),
+                child: Shimmer.fromColors(
+                  baseColor: Colors.grey.shade300,
+                  highlightColor: Colors.grey.shade100,
+                  child: Container(
+                    width: size.width * 0.2,
+                    height: 10,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           );
         }
       },

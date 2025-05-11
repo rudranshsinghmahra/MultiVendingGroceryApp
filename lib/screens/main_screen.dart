@@ -1,97 +1,89 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:multi_vending_grocery_app/screens/profile_screen.dart';
-import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
-
+import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 import '../widgets/cart/cart_notification.dart';
 import 'favourite_screen.dart';
 import 'home_screen.dart';
 import 'my_orders_screen.dart';
 
-class MainScreen extends StatelessWidget {
+class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
+
   static const String id = 'main-screen-page';
 
   @override
-  Widget build(BuildContext context) {
-    PersistentTabController controller;
-    controller = PersistentTabController(initialIndex: 0);
+  State<MainScreen> createState() => _MainScreenState();
+}
 
-    List<Widget> buildScreens() {
-      return [
-        const HomeScreen(),
-        const FavouriteScreen(),
-        const MyOrdersScreen(),
-        const ProfileScreen(),
-      ];
-    }
+class _MainScreenState extends State<MainScreen> {
+  PersistentTabController controller = PersistentTabController(initialIndex: 0);
 
-    List<PersistentBottomNavBarItem> navBarsItems() {
-      return [
-        PersistentBottomNavBarItem(
+  List<PersistentTabConfig> navBarsTabs() {
+    return [
+      PersistentTabConfig(
+        item: ItemConfig(
           icon: Image.asset('assets/logo.png'),
-          title: ("Home"),
-          activeColorPrimary: Theme.of(context).primaryColor,
-          inactiveColorPrimary: CupertinoColors.systemGrey,
+          title: "Home",
+          activeForegroundColor: Theme.of(context).primaryColor,
+          inactiveForegroundColor: CupertinoColors.systemGrey,
         ),
-        PersistentBottomNavBarItem(
-          icon: const Icon(CupertinoIcons.square_favorites_alt),
-          title: ("My Favourites"),
-          activeColorPrimary: Theme.of(context).primaryColor,
-          inactiveColorPrimary: CupertinoColors.systemGrey,
-        ),
-        PersistentBottomNavBarItem(
-          icon: const Icon(CupertinoIcons.bag),
-          title: ("My Orders"),
-          activeColorPrimary: Theme.of(context).primaryColor,
-          inactiveColorPrimary: CupertinoColors.systemGrey,
-        ),
-        PersistentBottomNavBarItem(
-          icon: const Icon(CupertinoIcons.profile_circled),
-          title: ("My Account"),
-          activeColorPrimary: Theme.of(context).primaryColor,
-          inactiveColorPrimary: CupertinoColors.systemGrey,
-        ),
-      ];
-    }
-
-    return Scaffold(
-      floatingActionButton: const Padding(
-        padding: EdgeInsets.only(bottom: 56),
-        child: CartNotification(),
+        screen: HomeScreen(),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      PersistentTabConfig(
+        item: ItemConfig(
+          icon: Icon(CupertinoIcons.square_favorites_alt),
+          title: "My Favourites",
+          activeForegroundColor: Theme.of(context).primaryColor,
+          inactiveForegroundColor: CupertinoColors.systemGrey,
+        ),
+        screen: FavouriteScreen(),
+      ),
+      PersistentTabConfig(
+        item: ItemConfig(
+          icon: Icon(CupertinoIcons.bag),
+          title: "My Orders",
+          activeForegroundColor: Theme.of(context).primaryColor,
+          inactiveForegroundColor: CupertinoColors.systemGrey,
+        ),
+        screen: MyOrdersScreen(),
+      ),
+      PersistentTabConfig(
+        item: ItemConfig(
+          icon: Icon(CupertinoIcons.profile_circled),
+          title: "My Account",
+          activeForegroundColor: Theme.of(context).primaryColor,
+          inactiveForegroundColor: CupertinoColors.systemGrey,
+        ),
+        screen: ProfileScreen(),
+      ),
+    ];
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
       body: PersistentTabView(
-        context,
+        tabs: navBarsTabs(),
+        avoidBottomPadding: true,
+        navBarBuilder: (navBarConfig) => Style9BottomNavBar(
+          navBarConfig: navBarConfig,
+          navBarDecoration: NavBarDecoration(color: Colors.white),
+        ),
         navBarHeight: 56,
         controller: controller,
-        screens: buildScreens(),
-        items: navBarsItems(),
-        confineToSafeArea:true,
         backgroundColor: Colors.white,
         handleAndroidBackButtonPress: true,
         resizeToAvoidBottomInset: true,
         stateManagement: true,
-        hideNavigationBarWhenKeyboardAppears: true,
-        bottomScreenMargin: 0,
-        decoration: NavBarDecoration(
-            colorBehindNavBar: Colors.white,
-            border: Border.all(color: Colors.black54)),
-        // popAllScreensOnTapOfSelectedTab: true,
-        popBehaviorOnSelectedNavBarItemPress: PopBehavior.all,
-        // animationSettings: const ItemAnimationProperties(
-        //   // Navigation Bar's items animation properties.
-        //   duration: Duration(milliseconds: 200),
-        //   curve: Curves.ease,
-        // ),
-        // screenTransitionAnimation: const ScreenTransitionAnimation(
-        //   // Screen transition animation on change of selected tab.
-        //   animateTabTransition: true,
-        //   curve: Curves.ease,
-        //   duration: Duration(milliseconds: 200),
-        // ),
-        navBarStyle:
-            NavBarStyle.style9, // Choose the nav bar style with this property.
+        gestureNavigationEnabled: true,
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButton: controller.index == 3 || controller.index == 2
+            ? Container()
+            : Padding(
+              padding: const EdgeInsets.only(bottom: 40.0),
+              child: CartNotification(),
+            ),
       ),
     );
   }

@@ -7,7 +7,7 @@ import '../../constants.dart';
 import '../../providers/coupons_provider.dart';
 
 class CouponWidget extends StatefulWidget {
-  const CouponWidget({Key? key, required this.couponVendor}) : super(key: key);
+  const CouponWidget({super.key, required this.couponVendor});
   final String couponVendor;
 
   @override
@@ -21,11 +21,11 @@ class _CouponWidgetState extends State<CouponWidget> {
   TextEditingController couponController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    var _coupon = Provider.of<CouponProvider>(context);
+    var coupon = Provider.of<CouponProvider>(context);
     return Container(
       color: Colors.white,
       child: Padding(
-        padding: const EdgeInsets.only(bottom: 10.0, right: 10, left: 10),
+        padding: const EdgeInsets.only(right: 10, left: 10,top: 10.0),
         child: Column(
           children: [
             Padding(
@@ -71,13 +71,13 @@ class _CouponWidgetState extends State<CouponWidget> {
                         ),
                         onPressed: () {
                           EasyLoading.show(status: "Validating Coupon...");
-                          _coupon
+                          coupon
                               .getCouponDetails(
                                   couponController.text, widget.couponVendor)
                               .then((value) {
-                            if (_coupon.documentSnapshot == null) {
+                            if (coupon.documentSnapshot == null) {
                               setState(() {
-                                _coupon.discountRate = 0;
+                                coupon.discountRate = 0;
                                 _isVisible = false;
                               });
                               EasyLoading.dismiss();
@@ -85,7 +85,7 @@ class _CouponWidgetState extends State<CouponWidget> {
                                   couponController.text, "Not Valid");
                               return;
                             }
-                            if (_coupon.expired == false) {
+                            if (coupon.expired == false) {
                               //not expired, coupon is valid
                               setState(() {
                                 _isVisible = true;
@@ -93,7 +93,7 @@ class _CouponWidgetState extends State<CouponWidget> {
                               EasyLoading.dismiss();
                               return;
                             }
-                            if (_coupon.expired == false) {
+                            if (coupon.expired == false) {
                               //not expired, coupon is valid
                               setState(() {
                                 _isVisible = true;
@@ -115,7 +115,7 @@ class _CouponWidgetState extends State<CouponWidget> {
             ),
             Visibility(
               visible: _isVisible,
-              child: _coupon.documentSnapshot == null
+              child: coupon.documentSnapshot == null
                   ? Container()
                   : Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -140,9 +140,9 @@ class _CouponWidgetState extends State<CouponWidget> {
                                       color: Colors.grey[800],
                                     ),
                                     Text(
-                                        "${_coupon.documentSnapshot?['details']}"),
+                                        "${coupon.documentSnapshot?['details']}"),
                                     Text(
-                                        "${_coupon.documentSnapshot?['discountRate']} % discount on total purchase"),
+                                        "${coupon.documentSnapshot?['discountRate']} % discount on total purchase"),
                                     const SizedBox(
                                       height: 10,
                                     )
@@ -157,7 +157,7 @@ class _CouponWidgetState extends State<CouponWidget> {
                                   icon: const Icon(Icons.clear),
                                   onPressed: () {
                                     setState(() {
-                                      _coupon.discountRate = 0;
+                                      coupon.discountRate = 0;
                                       _isVisible = false;
                                       couponController.clear();
                                     });

@@ -79,7 +79,7 @@ class OrderService {
       return "Your delivery person is ${document['deliveryBoy']['name']}";
     }
     if (document['orderStatus'] == "Delivered") {
-      return "You order is completed";
+      return "Your order is completed";
     }
     if (document['orderStatus'] == "Rejected") {
       return "Your Order is Rejected by ${document['orderStatus']['shopName']}";

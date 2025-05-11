@@ -9,7 +9,7 @@ import 'landing_screen.dart';
 import 'main_screen.dart';
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({Key? key}) : super(key: key);
+  const SplashScreen({super.key});
   static const String id = 'splash-screen';
 
   @override
@@ -25,7 +25,7 @@ class _SplashScreenState extends State<SplashScreen> {
         if (user == null) {
           Navigator.pushReplacementNamed(context, WelcomeScreen.id);
         } else {
-          //if user has data in Firestore check delivery address set or not.
+          //If user has data in Firebase then I will check delivery address is set or not.
           getUserData();
         }
       });

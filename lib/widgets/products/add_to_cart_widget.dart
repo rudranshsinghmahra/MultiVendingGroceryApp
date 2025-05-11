@@ -56,11 +56,13 @@ class _AddToCardWidgetState extends State<AddToCardWidget> {
         .then((QuerySnapshot querySnapshot) {
       for (var doc in querySnapshot.docs) {
         if (doc['productId'] == widget.documentSnapshot?['productId']) {
-          setState(() {
-            exists = true;
-            _qty = doc['qty'];
-            _docId = doc.id;
-          });
+          if(mounted){
+            setState(() {
+              exists = true;
+              _qty = doc['qty'];
+              _docId = doc.id;
+            });
+          }
         }
       }
     });

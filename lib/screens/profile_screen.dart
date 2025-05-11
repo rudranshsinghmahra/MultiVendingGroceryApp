@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:multi_vending_grocery_app/screens/payments/stripe/credit_card_list.dart';
 import 'package:multi_vending_grocery_app/screens/profile_update_screen.dart';
-import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/authentication_provider.dart';
@@ -13,6 +13,7 @@ import 'my_orders_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
+
   static const String id = 'profile-screen';
 
   @override
@@ -143,17 +144,8 @@ class ProfileScreen extends StatelessWidget {
                                                   .then((value) {
                                                 if (value != null) {
                                                   EasyLoading.dismiss();
-                                                  PersistentNavBarNavigator
-                                                      .pushNewScreenWithRouteSettings(
-                                                    context,
-                                                    settings:
-                                                        const RouteSettings(
-                                                            name: MapScreen.id),
-                                                    screen: const MapScreen(),
-                                                    pageTransitionAnimation:
-                                                        PageTransitionAnimation
-                                                            .cupertino,
-                                                  );
+                                                  pushScreen(context,
+                                                      screen: MapScreen());
                                                 } else {
                                                   EasyLoading.dismiss();
                                                   print(
@@ -174,16 +166,8 @@ class ProfileScreen extends StatelessWidget {
                                 child: IconButton(
                                   color: Colors.white,
                                   onPressed: () {
-                                    PersistentNavBarNavigator
-                                        .pushNewScreenWithRouteSettings(
-                                      context,
-                                      settings: const RouteSettings(
-                                          name: UpdateProfile.id),
-                                      withNavBar: false,
-                                      screen: const UpdateProfile(),
-                                      pageTransitionAnimation:
-                                          PageTransitionAnimation.cupertino,
-                                    );
+                                    pushScreen(context,
+                                        screen: UpdateProfile());
                                   },
                                   icon: const Icon(Icons.edit_outlined),
                                 ))
@@ -193,15 +177,7 @@ class ProfileScreen extends StatelessWidget {
                           padding: const EdgeInsets.only(left: 12.0),
                           child: ListTile(
                             onTap: () {
-                              PersistentNavBarNavigator
-                                  .pushNewScreenWithRouteSettings(
-                                context,
-                                settings: const RouteSettings(
-                                    name: MyOrdersScreen.id),
-                                screen: const MyOrdersScreen(),
-                                pageTransitionAnimation:
-                                    PageTransitionAnimation.cupertino,
-                              );
+                              pushScreen(context, screen: MyOrdersScreen());
                             },
                             horizontalTitleGap: 2,
                             contentPadding: EdgeInsets.zero,
@@ -213,15 +189,7 @@ class ProfileScreen extends StatelessWidget {
                           padding: EdgeInsets.only(left: 12.0),
                           child: ListTile(
                             onTap: () {
-                              PersistentNavBarNavigator
-                                  .pushNewScreenWithRouteSettings(
-                                context,
-                                settings: const RouteSettings(
-                                    name: CreditCardList.id),
-                                screen: const CreditCardList(),
-                                pageTransitionAnimation:
-                                    PageTransitionAnimation.cupertino,
-                              );
+                              pushScreen(context, screen: CreditCardList());
                             },
                             horizontalTitleGap: 2,
                             contentPadding: EdgeInsets.zero,

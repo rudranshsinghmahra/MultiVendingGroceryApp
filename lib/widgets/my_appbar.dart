@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -51,20 +52,20 @@ class _MyAppBarState extends State<MyAppBar> {
       title: TextButton(
         style: TextButton.styleFrom(padding: EdgeInsets.zero),
         onPressed: () {
-          locationData.getMyCurrentPosition().then((value) {
-            if (value != null) {
-              PersistentNavBarNavigator.pushNewScreenWithRouteSettings(
-                context,
-                settings: const RouteSettings(name: MapScreen.id),
-                screen: const MapScreen(),
-                withNavBar:
-                    false, // have to make this false if navigating outside
-                pageTransitionAnimation: PageTransitionAnimation.cupertino,
-              );
-            } else {
-              showAlert("Location Permission not Allowed");
-            }
-          });
+          EasyLoading.show(status: "Please Wait...");
+          try {
+            locationData.getMyCurrentPosition().then((value) {
+              if (value != null) {
+                pushScreen(context, screen: MapScreen());
+                EasyLoading.dismiss();
+              } else {
+                showAlert("Location Permission not Allowed");
+                EasyLoading.dismiss();
+              }
+            });
+          } catch (e) {
+            print(e.toString());
+          }
         },
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -112,18 +113,12 @@ class _MyAppBarState extends State<MyAppBar> {
           child: IconButton(
             icon: const Icon(
               Icons.logout,
+              color: Colors.white,
               size: 25,
             ),
             onPressed: () {
               FirebaseAuth.instance.signOut();
-              PersistentNavBarNavigator.pushNewScreenWithRouteSettings(
-                context,
-                settings: const RouteSettings(name: WelcomeScreen.id),
-                screen: const WelcomeScreen(),
-                withNavBar:
-                    false, // have to make this false if navigating outside
-                pageTransitionAnimation: PageTransitionAnimation.cupertino,
-              );
+              pushScreen(context, screen: WelcomeScreen());
             },
           ),
         ),
@@ -132,15 +127,11 @@ class _MyAppBarState extends State<MyAppBar> {
           child: IconButton(
             icon: const Icon(
               Icons.account_circle,
+              color: Colors.white,
               size: 25,
             ),
             onPressed: () {
-              PersistentNavBarNavigator.pushNewScreenWithRouteSettings(
-                context,
-                settings: const RouteSettings(name: ProfileScreen.id),
-                screen: const ProfileScreen(),
-                pageTransitionAnimation: PageTransitionAnimation.cupertino,
-              );
+              pushScreen(context, screen: ProfileScreen());
             },
           ),
         )

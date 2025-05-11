@@ -50,9 +50,10 @@ class RecentlyAddedProducts extends StatelessWidget {
                           style: TextStyle(
                               shadows: [
                                 Shadow(
-                                    offset: Offset(2.0, 2.0),
-                                    blurRadius: 3.0,
-                                    color: Colors.black)
+                                  offset: Offset(2.0, 2.0),
+                                  blurRadius: 3.0,
+                                  color: Colors.black,
+                                )
                               ],
                               color: Colors.black,
                               fontWeight: FontWeight.bold,
@@ -63,19 +64,14 @@ class RecentlyAddedProducts extends StatelessWidget {
                     ),
                   ),
                 ),
-              Padding(
-                padding: cartProvider.cartQty > 0
-                    ? EdgeInsets.only(bottom: 100.0)
-                    : EdgeInsets.only(bottom: 50.0),
-                child: ListView(
-                  padding: EdgeInsets.zero,
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  children: snapshot.data.docs
-                      .map<Widget>((DocumentSnapshot document) {
-                    return ProductCard(documentSnapshot: document);
-                  }).toList(),
-                ),
+              ListView(
+                padding: EdgeInsets.zero,
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                children:
+                    snapshot.data.docs.map<Widget>((DocumentSnapshot document) {
+                  return ProductCard(documentSnapshot: document);
+                }).toList(),
               )
             ],
           );

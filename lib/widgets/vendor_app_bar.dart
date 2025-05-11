@@ -86,7 +86,7 @@ class _VendorAppBarState extends State<VendorAppBar> {
       ),
       floating: true,
       snap: true,
-      expandedHeight: 300,
+      expandedHeight: 330,
       flexibleSpace: Padding(
         padding:
             const EdgeInsets.only(top: 90, bottom: 10, left: 10, right: 10),

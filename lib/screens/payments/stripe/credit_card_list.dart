@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_credit_card/flutter_credit_card.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 
 import '../../../services/payment_gateways/stripe_payment_service.dart';
 import 'create_new_card_screen.dart';
@@ -20,12 +20,7 @@ class CreditCardList extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () {
-              PersistentNavBarNavigator.pushNewScreenWithRouteSettings(
-                context,
-                settings: const RouteSettings(name: CreateNewCard.id),
-                screen: const CreateNewCard(),
-                pageTransitionAnimation: PageTransitionAnimation.cupertino,
-              );
+              pushScreen(context, screen: CreateNewCard());
             },
             icon: const Icon(Icons.add_circle_rounded),
             color: Colors.white,
@@ -60,14 +55,7 @@ class CreditCardList extends StatelessWidget {
                   ),
                   ElevatedButton(
                       onPressed: () {
-                        PersistentNavBarNavigator
-                            .pushNewScreenWithRouteSettings(
-                          context,
-                          settings: const RouteSettings(name: CreateNewCard.id),
-                          screen: const CreateNewCard(),
-                          pageTransitionAnimation:
-                              PageTransitionAnimation.cupertino,
-                        );
+                        pushScreen(context, screen: CreateNewCard());
                       },
                       child: const Text("Add Card"))
                 ],

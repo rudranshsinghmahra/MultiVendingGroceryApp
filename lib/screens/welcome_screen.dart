@@ -9,6 +9,7 @@ import 'otp_verification_screen.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
+
   static const String id = 'welcome-screen';
 
   @override
@@ -112,7 +113,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                           number:
                                               '+91${phoneNumberController.text}'),
                                     ),
-                                  );
+                                  ).then((_) {
+                                    setState(() {
+                                      auth.isLoading = false;
+                                    });
+                                  });
                                 },
                                 child: auth.isLoading
                                     ? const Center(
@@ -127,8 +132,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                             ? "Continue"
                                             : "Enter Phone Number",
                                         style: const TextStyle(
-                                          fontSize: 20,
-                                        ),
+                                            fontSize: 20, color: Colors.white),
                                       ),
                               ),
                             ),

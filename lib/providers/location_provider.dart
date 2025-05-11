@@ -28,9 +28,9 @@ class LocationProvider extends ChangeNotifier {
         locationSettings: LocationSettings(accuracy: LocationAccuracy.high),
       );
       permissionAllowed = true;
-      notifyListeners();
       latitude = position.latitude;
       longitude = position.longitude;
+      notifyListeners();
 
       List<geocoding.Placemark> placemarks =
           await geocoding.placemarkFromCoordinates(latitude, longitude);

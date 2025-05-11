@@ -11,6 +11,7 @@ import '../services/order_services.dart';
 
 class MyOrdersScreen extends StatefulWidget {
   const MyOrdersScreen({super.key});
+
   static const String id = "my-orders-screen";
 
   @override
@@ -86,7 +87,7 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
                   .where('userId', isEqualTo: user?.uid)
                   .where('orderStatus',
                       isEqualTo: tag > 0 ? orderProvider.status : null)
-                  .orderBy('timestamp',descending: true)
+                  .orderBy('timestamp', descending: true)
                   .snapshots(),
               builder: (BuildContext context,
                   AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -127,7 +128,8 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
                                   data['orderStatus'],
                                   style: TextStyle(
                                     fontSize: 15,
-                                    color: _orderServices.statusColor(document),
+                                    color:
+                                        _orderServices.statusColor(document),
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -135,7 +137,7 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
                                   "On ${DateFormat.yMMMd().format(
                                     DateTime.parse(data['timestamp']),
                                   )}",
-                                  style: const TextStyle(fontSize: 1),
+                                  style: const TextStyle(fontSize: 14),
                                 ),
                                 trailing: Column(
                                   crossAxisAlignment: CrossAxisAlignment.end,
@@ -174,9 +176,10 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
                                               BorderRadius.circular(15),
                                           child: SizedBox(
                                             width: 50,
-                                            height: 40,
+                                            height: 50,
                                             child: Image.network(
-                                              document['deliveryBoy']['image'],
+                                              document['deliveryBoy']
+                                                  ['image'],
                                               fit: BoxFit.fill,
                                             ),
                                           ),
@@ -212,8 +215,9 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
                                       return ListTile(
                                         leading: CircleAvatar(
                                           backgroundColor: Colors.white,
-                                          child: Image.network(data['products']
-                                              [index]['productImage']),
+                                          child: Image.network(
+                                              data['products'][index]
+                                                  ['productImage']),
                                         ),
                                         title: Text(data['products'][index]
                                             ['productName']),
@@ -224,7 +228,10 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.only(
-                                        left: 12, right: 12, top: 8, bottom: 8),
+                                        left: 12,
+                                        right: 12,
+                                        top: 8,
+                                        bottom: 8),
                                     child: Card(
                                       elevation: 8,
                                       color: Colors.green,
@@ -294,8 +301,8 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
                                                             "${data['discountCode']}",
                                                             style:
                                                                 const TextStyle(
-                                                              color:
-                                                                  Colors.white,
+                                                              color: Colors
+                                                                  .white,
                                                               fontWeight:
                                                                   FontWeight
                                                                       .bold,

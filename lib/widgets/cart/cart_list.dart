@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../services/cart_services.dart';
 import 'cart_card.dart';
@@ -24,23 +25,46 @@ class _CartListState extends State<CartList> {
           .snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasError) {
-          return const Text('Something went wrong');
+          return const Center(child: Text('Something went wrong'));
         }
 
         if (!snapshot.hasData) {
-          return const Center(
-            child: CircularProgressIndicator(),
+          return ListView.builder(
+            padding: EdgeInsets.zero,
+            shrinkWrap: true,
+            itemCount: 4,
+            itemBuilder: (context, index) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                child: Shimmer.fromColors(
+                  baseColor: Colors.grey.shade300,
+                  highlightColor: Colors.grey.shade100,
+                  child: Container(
+                    height: 100,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                ),
+              );
+            },
           );
         }
 
-        return ListView(
+        var cartItems = snapshot.data!.docs;
+
+        if (cartItems.isEmpty) {
+          return const Center(child: Text("Your cart is empty."));
+        }
+
+        return ListView.builder(
           padding: EdgeInsets.zero,
           shrinkWrap: true,
-          children: snapshot.data!.docs.map((DocumentSnapshot document) {
-            Map<String, dynamic> data =
-                document.data()! as Map<String, dynamic>;
-            return CartCard(documentSnapshot: document);
-          }).toList(),
+          itemCount: cartItems.length,
+          itemBuilder: (context, index) {
+            return CartCard(documentSnapshot: cartItems[index]);
+          },
         );
       },
     );

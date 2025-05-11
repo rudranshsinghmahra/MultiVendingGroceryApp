@@ -65,13 +65,8 @@ class AuthenticationProvider extends ChangeNotifier {
         .collection('users')
         .doc(_auth.currentUser?.uid)
         .get();
-    if (result != null) {
-      documentSnapshot = result;
-      notifyListeners();
-    } else {
-      documentSnapshot = null;
-      notifyListeners();
-    }
-    return result;
+    documentSnapshot = result;
+    notifyListeners();
+      return result;
   }
 }
