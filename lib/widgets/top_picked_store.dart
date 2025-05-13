@@ -34,46 +34,47 @@ class _TopPickedStoreState extends State<TopPickedStore> {
       future: _locationFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {
-          return  ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: 5,  // Placeholder shimmer items
-            itemBuilder: (context, index) {
-              return Shimmer.fromColors(
-                baseColor: Colors.grey.shade300,
-                highlightColor: Colors.grey.shade100,
-                child: Padding(
-                  padding: const EdgeInsets.all(4.0),
-                  child: SizedBox(
-                    width: 80,
-                    child: Column(
-                      children: [
-                        Container(
-                          width: 80,
-                          height: 80,
-                          color: Colors.white,
-                        ),
-                        const SizedBox(height: 5),
-                        Container(
-                          height: 15,
-                          width: 60,
-                          color: Colors.white,
-                        ),
-                        const SizedBox(height: 5),
-                        Container(
-                          height: 12,
-                          width: 40,
-                          color: Colors.white,
-                        ),
-                      ],
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: 5, // Placeholder shimmer items
+              itemBuilder: (context, index) {
+                return Shimmer.fromColors(
+                  baseColor: Colors.grey.shade300,
+                  highlightColor: Colors.grey.shade100,
+                  child: Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: SizedBox(
+                      width: 80,
+                      child: Column(
+                        children: [
+                          Container(
+                            width: 80,
+                            height: 80,
+                            color: Colors.white,
+                          ),
+                          const SizedBox(height: 5),
+                          Container(
+                            height: 15,
+                            width: 60,
+                            color: Colors.white,
+                          ),
+                          const SizedBox(height: 5),
+                          Container(
+                            height: 12,
+                            width: 40,
+                            color: Colors.white,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              );
-            },
+                );
+              },
+            ),
           );
         }
-
-        print("Lat: ${storeData.userLatitude}, Lng: ${storeData.userLongitude}");
 
         String getDistance(location) {
           var distance = Geolocator.distanceBetween(storeData.userLatitude,
@@ -84,7 +85,8 @@ class _TopPickedStoreState extends State<TopPickedStore> {
 
         return StreamBuilder<QuerySnapshot>(
           stream: StoreServices().getTopPickedStore(),
-          builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          builder:
+              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (!snapshot.hasData) {
               return Padding(
                 padding: const EdgeInsets.only(left: 10, right: 8),
@@ -95,7 +97,8 @@ class _TopPickedStoreState extends State<TopPickedStore> {
                       padding: EdgeInsets.only(bottom: 10, top: 20),
                       child: Row(
                         children: [
-                          SizedBox(height: 30, child: Icon(Icons.store, size: 30)),
+                          SizedBox(
+                              height: 30, child: Icon(Icons.store, size: 30)),
                           SizedBox(width: 10),
                           Text(
                             "Top Picked Store Near To You",
@@ -108,7 +111,7 @@ class _TopPickedStoreState extends State<TopPickedStore> {
                     Flexible(
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
-                        itemCount: 5,  // Placeholder shimmer items
+                        itemCount: 5, // Placeholder shimmer items
                         itemBuilder: (context, index) {
                           return Shimmer.fromColors(
                             baseColor: Colors.grey.shade300,
@@ -148,6 +151,12 @@ class _TopPickedStoreState extends State<TopPickedStore> {
                 ),
               );
             }
+            if (snapshot.data!.docs.isEmpty) {
+              return Image.asset(
+                "assets/no_top_picked_store.png",
+                fit: BoxFit.fill,
+              );
+            }
 
             List actualShopDistance = [];
             for (int i = 0; i <= snapshot.data!.docs.length - 1; i++) {
@@ -169,7 +178,8 @@ class _TopPickedStoreState extends State<TopPickedStore> {
                     padding: EdgeInsets.only(left: 20, top: 20),
                     child: Text(
                       "No Store Within 10km",
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                   )
                 ],
@@ -186,11 +196,13 @@ class _TopPickedStoreState extends State<TopPickedStore> {
                     padding: const EdgeInsets.only(bottom: 10, top: 20),
                     child: Row(
                       children: [
-                        SizedBox(height: 30, child: Image.asset('assets/like.gif')),
+                        SizedBox(
+                            height: 30, child: Image.asset('assets/like.gif')),
                         const SizedBox(width: 10),
                         const Text(
                           "Top Picked Store Near To You",
-                          style: TextStyle(fontWeight: FontWeight.w900, fontSize: 20),
+                          style: TextStyle(
+                              fontWeight: FontWeight.w900, fontSize: 20),
                         )
                       ],
                     ),
@@ -199,12 +211,13 @@ class _TopPickedStoreState extends State<TopPickedStore> {
                     child: ListView(
                       scrollDirection: Axis.horizontal,
                       children: snapshot.data!.docs.map(
-                            (DocumentSnapshot document) {
-                          if (double.parse(getDistance(document['location'])) <= 10) {
+                        (DocumentSnapshot document) {
+                          if (double.parse(getDistance(document['location'])) <=
+                              10) {
                             return InkWell(
                               onTap: () {
-                                storeData.getSelectedStore(
-                                    document, getDistance(document['location']));
+                                storeData.getSelectedStore(document,
+                                    getDistance(document['location']));
                                 pushScreen(context, screen: VendorHomeScreen());
                               },
                               child: Padding(
@@ -218,7 +231,8 @@ class _TopPickedStoreState extends State<TopPickedStore> {
                                         height: 80,
                                         child: Card(
                                           child: ClipRRect(
-                                            borderRadius: BorderRadius.circular(4),
+                                            borderRadius:
+                                                BorderRadius.circular(4),
                                             child: Image.network(
                                               document['imageUrl'],
                                               fit: BoxFit.cover,
@@ -256,7 +270,8 @@ class _TopPickedStoreState extends State<TopPickedStore> {
                                   child: Text(
                                     "No Store Within 10km",
                                     style: TextStyle(
-                                        fontSize: 20, fontWeight: FontWeight.bold),
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold),
                                   ),
                                 )
                               ],

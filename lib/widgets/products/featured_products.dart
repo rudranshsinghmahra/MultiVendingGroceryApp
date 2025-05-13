@@ -10,15 +10,15 @@ class FeaturedProducts extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ProductServices _services = ProductServices();
-    var _storeProvider = Provider.of<StoreProvider>(context);
+    ProductServices services = ProductServices();
+    var storeProvider = Provider.of<StoreProvider>(context);
 
     return FutureBuilder<QuerySnapshot>(
-      future: _services.products
+      future: services.products
           .where('published', isEqualTo: true)
           .where('collection', isEqualTo: "Featured Products")
           .where('seller.sellerUid',
-              isEqualTo: _storeProvider.storeDetails?['uid'])
+              isEqualTo: storeProvider.storeDetails?['uid'])
           .get(),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if (snapshot.hasError) {

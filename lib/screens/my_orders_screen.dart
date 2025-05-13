@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import '../providers/cart_provider.dart';
 import '../providers/orders_provider.dart';
 import '../services/order_services.dart';
 
@@ -108,7 +109,7 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
                 }
                 return Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: EdgeInsets.only(top: 8.0,bottom: 50.0, left: 8.0,right: 8.0),
                     child: ListView(
                       children:
                           snapshot.data!.docs.map((DocumentSnapshot document) {
@@ -128,8 +129,7 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
                                   data['orderStatus'],
                                   style: TextStyle(
                                     fontSize: 15,
-                                    color:
-                                        _orderServices.statusColor(document),
+                                    color: _orderServices.statusColor(document),
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -178,8 +178,7 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
                                             width: 50,
                                             height: 50,
                                             child: Image.network(
-                                              document['deliveryBoy']
-                                                  ['image'],
+                                              document['deliveryBoy']['image'],
                                               fit: BoxFit.fill,
                                             ),
                                           ),
@@ -215,9 +214,8 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
                                       return ListTile(
                                         leading: CircleAvatar(
                                           backgroundColor: Colors.white,
-                                          child: Image.network(
-                                              data['products'][index]
-                                                  ['productImage']),
+                                          child: Image.network(data['products']
+                                              [index]['productImage']),
                                         ),
                                         title: Text(data['products'][index]
                                             ['productName']),
@@ -228,10 +226,7 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.only(
-                                        left: 12,
-                                        right: 12,
-                                        top: 8,
-                                        bottom: 8),
+                                        left: 12, right: 12, top: 8, bottom: 8),
                                     child: Card(
                                       elevation: 8,
                                       color: Colors.green,
@@ -301,8 +296,8 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
                                                             "${data['discountCode']}",
                                                             style:
                                                                 const TextStyle(
-                                                              color: Colors
-                                                                  .white,
+                                                              color:
+                                                                  Colors.white,
                                                               fontWeight:
                                                                   FontWeight
                                                                       .bold,

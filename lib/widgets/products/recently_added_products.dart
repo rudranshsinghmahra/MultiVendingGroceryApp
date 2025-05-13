@@ -14,7 +14,7 @@ class RecentlyAddedProducts extends StatelessWidget {
   Widget build(BuildContext context) {
     ProductServices services = ProductServices();
     var storeProvider = Provider.of<StoreProvider>(context);
-    var cartProvider = Provider.of<CartProvider>(context);
+    // var cartProvider = Provider.of<CartProvider>(context);
 
     return FutureBuilder<QuerySnapshot>(
         future: services.products

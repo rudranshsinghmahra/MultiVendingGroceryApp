@@ -6,7 +6,9 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../constants.dart';
+import '../providers/cart_provider.dart';
 import '../providers/location_provider.dart';
+import '../screens/cart_screen.dart';
 import '../screens/map_screen.dart';
 import '../screens/profile_screen.dart';
 import '../screens/welcome_screen.dart';
@@ -42,6 +44,7 @@ class _MyAppBarState extends State<MyAppBar> {
   @override
   Widget build(BuildContext context) {
     final locationData = Provider.of<LocationProvider>(context);
+    var cartProvider = Provider.of<CartProvider>(context);
     return SliverAppBar(
       backgroundColor: Theme.of(context).primaryColor,
       expandedHeight: 150,
@@ -112,13 +115,16 @@ class _MyAppBarState extends State<MyAppBar> {
           padding: const EdgeInsets.only(top: 5),
           child: IconButton(
             icon: const Icon(
-              Icons.logout,
+              Icons.shopping_cart,
               color: Colors.white,
               size: 25,
             ),
             onPressed: () {
-              FirebaseAuth.instance.signOut();
-              pushScreen(context, screen: WelcomeScreen());
+              pushScreen(context,
+                  screen: CartScreen(
+                    documentSnapshot:
+                    cartProvider.documentSnapshot,
+                  ));
             },
           ),
         ),

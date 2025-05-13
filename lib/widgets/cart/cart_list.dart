@@ -59,6 +59,7 @@ class _CartListState extends State<CartList> {
         }
 
         return ListView.builder(
+          physics: NeverScrollableScrollPhysics(),
           padding: EdgeInsets.zero,
           shrinkWrap: true,
           itemCount: cartItems.length,

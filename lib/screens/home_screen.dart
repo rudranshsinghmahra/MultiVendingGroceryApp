@@ -36,7 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.deepPurple,
+      color: Theme.of(context).primaryColor,
       child: SafeArea(
         child: Scaffold(
           body: NestedScrollView(

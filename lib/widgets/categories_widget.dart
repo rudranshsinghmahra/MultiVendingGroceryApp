@@ -34,9 +34,11 @@ class _VendorCategoriesState extends State<VendorCategories> {
       categorySet.add(doc['categoryName']['mainCategory']);
     }
 
-    setState(() {
-      categoriesList = categorySet.toList(); // Convert set to list
-    });
+    if(mounted){
+      setState(() {
+        categoriesList = categorySet.toList(); // Converting set to list
+      });
+    }
   }
 
   @override

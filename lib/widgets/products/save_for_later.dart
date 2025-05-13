@@ -66,7 +66,7 @@ class _SaveForLaterState extends State<SaveForLater> {
       },
       child: Container(
         height: 56,
-        color: Colors.grey[800],
+        color: isFavourite ? Colors.grey.shade500 : Colors.grey[800],
         child: Center(
           child: Padding(
             padding: const EdgeInsets.all(8.0),

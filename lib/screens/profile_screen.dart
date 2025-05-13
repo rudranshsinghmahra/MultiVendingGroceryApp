@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:multi_vending_grocery_app/providers/cart_provider.dart';
+import 'package:multi_vending_grocery_app/screens/cart_screen.dart';
 import 'package:multi_vending_grocery_app/screens/payments/stripe/credit_card_list.dart';
 import 'package:multi_vending_grocery_app/screens/profile_update_screen.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
@@ -19,6 +21,7 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var userDetails = Provider.of<AuthenticationProvider>(context);
+    var cartProvider = Provider.of<CartProvider>(context);
     userDetails.getUserDetails();
     var location = Provider.of<LocationProvider>(context);
     User? user = FirebaseAuth.instance.currentUser;
@@ -172,6 +175,22 @@ class ProfileScreen extends StatelessWidget {
                                   icon: const Icon(Icons.edit_outlined),
                                 ))
                           ],
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 12.0),
+                          child: ListTile(
+                            onTap: () {
+                              pushScreen(context,
+                                  screen: CartScreen(
+                                    documentSnapshot:
+                                        cartProvider.documentSnapshot,
+                                  ));
+                            },
+                            horizontalTitleGap: 2,
+                            contentPadding: EdgeInsets.zero,
+                            leading: Icon(Icons.shopping_cart),
+                            title: Text("My Cart"),
+                          ),
                         ),
                         Padding(
                           padding: const EdgeInsets.only(left: 12.0),

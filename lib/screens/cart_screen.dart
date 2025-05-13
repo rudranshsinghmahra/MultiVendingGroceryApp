@@ -73,286 +73,6 @@ class _CartScreenState extends State<CartScreen> {
     });
   }
 
-  @override
-  Widget build(BuildContext context) {
-    var cartProvider = Provider.of<CartProvider>(context);
-    var couponProvider = Provider.of<CouponProvider>(context);
-    var payable = cartProvider.subTotal + deliveryFee - discount;
-    final locationData = Provider.of<LocationProvider>(context);
-    var userDetails = Provider.of<AuthenticationProvider>(context);
-    userDetails.getUserDetails().then((value) {
-      double subTotal = cartProvider.subTotal;
-      double discountRate = couponProvider.discountRate / 100;
-      if (mounted) {
-        setState(() {
-          discount = subTotal * discountRate;
-        });
-      }
-    });
-    final orderProvider = Provider.of<OrderProvider>(context);
-    return SafeArea(
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        backgroundColor: Colors.white,
-        bottomNavigationBar: userDetails.documentSnapshot == null
-            ? Container()
-            : Container(
-                height: 160,
-                color: Colors.blueGrey[600],
-                child: Column(
-                  children: [
-                    Container(
-                      height: 100,
-                      width: MediaQuery.of(context).size.width,
-                      color: Colors.white,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                const Expanded(
-                                  child: Text(
-                                    "Deliver to this Address : ",
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 15),
-                                  ),
-                                ),
-                                InkWell(
-                                  onTap: () {
-                                    setState(() {
-                                      _loading = false;
-                                    });
-                                    locationData
-                                        .getMyCurrentPosition()
-                                        .then((value) {
-                                      if (value != null) {
-                                        setState(() {
-                                          _loading = false;
-                                        });
-                                        pushScreen(context,
-                                            screen: MapScreen());
-                                      } else {
-                                        showAlert(
-                                            "Location Permission not Allowed");
-                                      }
-                                    });
-                                  },
-                                  child: _loading
-                                      ? const CircularProgressIndicator()
-                                      : const Text(
-                                          "Change",
-                                          style: TextStyle(
-                                              color: Colors.red, fontSize: 15),
-                                        ),
-                                )
-                              ],
-                            ),
-                            Flexible(
-                              child: Text(
-                                userDetails.documentSnapshot?['firstName'] !=
-                                        null
-                                    ? "${userDetails.documentSnapshot?['firstName']} ${userDetails.documentSnapshot?['lastName']} : $location, $address"
-                                    : "$location, $address",
-                                style: const TextStyle(
-                                    color: Colors.grey, fontSize: 15),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                    Center(
-                      child: Padding(
-                        padding:
-                            const EdgeInsets.only(left: 20, right: 20, top: 5),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  "Rs ${payable.toStringAsFixed(0)}",
-                                  style: const TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                const Text(
-                                  "Including Taxes",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
-                                )
-                              ],
-                            ),
-                            ElevatedButton(
-                              onPressed: () {
-                                EasyLoading.show(status: "Please Wait...");
-                                _userServices
-                                    .getUserDataById(user!.uid)
-                                    .then((value) {
-                                  if (value['firstName'] == null) {
-                                    EasyLoading.dismiss();
-                                    pushScreen(context,
-                                        screen: ProfileScreen());
-                                  } else {
-                                    EasyLoading.dismiss();
-                                    // EasyLoading.show(status: "Please Wait....");
-                                    //TODO: PAYMENT GATEWAY INTEGRATION
-                                    if (cartProvider.cod == false) {
-                                      //Pay Online
-                                      orderProvider.totalAmountPayable(
-                                          payable,
-                                          widget.documentSnapshot?['shopName'],
-                                          userDetails
-                                              .documentSnapshot?['email']);
-                                      Navigator.pushNamed(
-                                              context, PaymentHome.id)
-                                          .whenComplete(() {
-                                        print(orderProvider.success);
-                                        if (orderProvider.success == true) {
-                                          _saveOrder(cartProvider, payable,
-                                              couponProvider, orderProvider);
-                                        }
-                                      });
-                                    } else {
-                                      // Cash On Delivery
-                                      _saveOrder(cartProvider, payable,
-                                          couponProvider, orderProvider);
-                                    }
-                                  }
-                                });
-                              },
-                              style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.all(
-                                      Colors.redAccent)),
-                              child: checkingUser
-                                  ? const CircularProgressIndicator()
-                                  : const Text(
-                                      "CHECKOUT",
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-        body: NestedScrollView(
-          headerSliverBuilder: (BuildContext context, bool innerBozIsSxRolled) {
-            return [
-              SliverAppBar(
-                iconTheme: const IconThemeData.fallback(),
-                floating: true,
-                snap: true,
-                backgroundColor: Colors.white,
-                elevation: 0.0,
-                title: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      widget.documentSnapshot?['shopName'],
-                      style: const TextStyle(fontSize: 16, color: Colors.black),
-                    ),
-                    Row(
-                      children: [
-                        Text(
-                          "${cartProvider.cartQty} ${cartProvider.cartQty > 1 ? "Items" : "Item"}",
-                          style:
-                              const TextStyle(fontSize: 10, color: Colors.grey),
-                        ),
-                        Text(
-                          "To Pay : Rs ${payable.toStringAsFixed(0)}",
-                          style:
-                              const TextStyle(fontSize: 10, color: Colors.grey),
-                        )
-                      ],
-                    )
-                  ],
-                ),
-              ),
-            ];
-          },
-          body: dSnapshot == null
-              ? const Center(child: CircularProgressIndicator())
-              : cartProvider.cartQty > 0
-                  ? SingleChildScrollView(
-                      padding: const EdgeInsets.only(bottom: 56),
-                      child: Container(
-                        margin: const EdgeInsets.only(top: 15),
-                        padding: EdgeInsets.only(
-                            bottom: MediaQuery.of(context).viewInsets.bottom),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Container(
-                            color: Colors.white,
-                            child: Column(
-                              children: [
-                                Column(children: [
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  ListTile(
-                                    leading: SizedBox(
-                                      height: 60,
-                                      width: 60,
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(4),
-                                        child: Image.network(
-                                          dSnapshot?['imageUrl'],
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                    ),
-                                    title: Text(dSnapshot?['shopName']),
-                                    subtitle: Text(
-                                      dSnapshot?['address'],
-                                      style: const TextStyle(
-                                          fontSize: 12, color: Colors.grey),
-                                    ),
-                                  ),
-                                  const CustomToggleButton(),
-                                  Divider(
-                                    color: Colors.grey[300],
-                                  )
-                                ]),
-                                CartList(
-                                  documentSnapshot: widget.documentSnapshot,
-                                ),
-                                CouponWidget(
-                                  couponVendor: dSnapshot?['uid'],
-                                ),
-                                BillingDetailsWidget(
-                                  subTotal: cartProvider.subTotal,
-                                  discount: discount,
-                                  deliveryFee: deliveryFee,
-                                  payable: payable,
-                                  savings: cartProvider.savings,
-                                  textStyle: textStyle,
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    )
-                  : const Center(
-                      child: Text(
-                        "Cart is Empty , Please add some products",
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-        ),
-      ),
-    );
-  }
-
   _saveOrder(CartProvider cartProvider, payable, CouponProvider coupon,
       OrderProvider orderProvider) {
     _orderService.saveOrder({
@@ -388,5 +108,282 @@ class _CartScreenState extends State<CartScreen> {
         });
       });
     });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var cartProvider = Provider.of<CartProvider>(context);
+    var couponProvider = Provider.of<CouponProvider>(context);
+    var payable = cartProvider.subTotal + deliveryFee - discount;
+    final locationData = Provider.of<LocationProvider>(context);
+    var userDetails = Provider.of<AuthenticationProvider>(context);
+    userDetails.getUserDetails().then((value) {
+      double subTotal = cartProvider.subTotal;
+      double discountRate = couponProvider.discountRate / 100;
+      if (mounted) {
+        setState(() {
+          discount = subTotal * discountRate;
+        });
+      }
+    });
+    final orderProvider = Provider.of<OrderProvider>(context);
+    return Container(
+      color: Theme.of(context).primaryColor,
+      child: SafeArea(
+        child: Scaffold(
+          resizeToAvoidBottomInset: false,
+          backgroundColor: Colors.white,
+          bottomNavigationBar: userDetails.documentSnapshot == null
+              ? Container()
+              : Container(
+                  height: 160,
+                  color: Colors.deepPurple.shade300,
+                  child: Column(
+                    children: [
+                      Container(
+                        height: 100,
+                        width: MediaQuery.of(context).size.width,
+                        color: Colors.white,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  const Expanded(
+                                    child: Text(
+                                      "Deliver to this Address : ",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 15),
+                                    ),
+                                  ),
+                                  InkWell(
+                                    onTap: () {
+                                      setState(() {
+                                        _loading = false;
+                                      });
+                                      locationData
+                                          .getMyCurrentPosition()
+                                          .then((value) {
+                                        if (value != null) {
+                                          setState(() {
+                                            _loading = false;
+                                          });
+                                          pushScreen(context,
+                                              screen: MapScreen());
+                                        } else {
+                                          showAlert(
+                                              "Location Permission not Allowed");
+                                        }
+                                      });
+                                    },
+                                    child: _loading
+                                        ? const CircularProgressIndicator()
+                                        : const Text(
+                                            "Change",
+                                            style: TextStyle(
+                                                color: Colors.red,
+                                                fontSize: 15),
+                                          ),
+                                  )
+                                ],
+                              ),
+                              Flexible(
+                                child: Text(
+                                  userDetails.documentSnapshot?['firstName'] !=
+                                          null
+                                      ? "${userDetails.documentSnapshot?['firstName']} ${userDetails.documentSnapshot?['lastName']} : $location, $address"
+                                      : "$location, $address",
+                                  style: const TextStyle(
+                                      color: Colors.grey, fontSize: 15),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                      Center(
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                              left: 20, right: 20, top: 5),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    "Rs ${payable.toStringAsFixed(0)}",
+                                    style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  const Text(
+                                    "Including Taxes",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold),
+                                  )
+                                ],
+                              ),
+                              ElevatedButton(
+                                onPressed: () {
+                                  EasyLoading.show(status: "Please Wait...");
+                                  _userServices
+                                      .getUserDataById(user!.uid)
+                                      .then((value) {
+                                    if (value['firstName'] == null) {
+                                      EasyLoading.dismiss();
+                                      pushScreen(context,
+                                          screen: ProfileScreen());
+                                    } else {
+                                      EasyLoading.dismiss();
+                                      // EasyLoading.show(status: "Please Wait....");
+                                      //TODO: PAYMENT GATEWAY INTEGRATION
+                                      if (cartProvider.cod == false) {
+                                        //Pay Online
+                                        orderProvider.totalAmountPayable(
+                                            payable,
+                                            widget
+                                                .documentSnapshot?['shopName'],
+                                            userDetails
+                                                .documentSnapshot?['email']);
+                                        Navigator.pushNamed(
+                                                context, PaymentHome.id)
+                                            .whenComplete(() {
+                                          print(orderProvider.success);
+                                          if (orderProvider.success == true) {
+                                            _saveOrder(cartProvider, payable,
+                                                couponProvider, orderProvider);
+                                          }
+                                        });
+                                      } else {
+                                        // Cash On Delivery
+                                        _saveOrder(cartProvider, payable,
+                                            couponProvider, orderProvider);
+                                      }
+                                    }
+                                  });
+                                },
+                                style: ButtonStyle(
+                                    backgroundColor: MaterialStateProperty.all(
+                                        Colors.redAccent)),
+                                child: checkingUser
+                                    ? const CircularProgressIndicator()
+                                    : const Text(
+                                        "CHECKOUT",
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+          body: NestedScrollView(
+            headerSliverBuilder:
+                (BuildContext context, bool innerBozIsSxRolled) {
+              return [
+                SliverAppBar(
+                  iconTheme: const IconThemeData.fallback(),
+                  floating: true,
+                  snap: true,
+                  backgroundColor: Colors.white,
+                  elevation: 0.0,
+                  title: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.documentSnapshot?['shopName'],
+                        style:
+                            const TextStyle(fontSize: 16, color: Colors.black),
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            "${cartProvider.cartQty} ${cartProvider.cartQty > 1 ? "Items" : "Item"}",
+                            style: const TextStyle(
+                                fontSize: 10, color: Colors.grey),
+                          ),
+                          Text(
+                            "To Pay : Rs ${payable.toStringAsFixed(0)}",
+                            style: const TextStyle(
+                                fontSize: 10, color: Colors.grey),
+                          )
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              ];
+            },
+            body: dSnapshot == null
+                ? const Center(child: CircularProgressIndicator())
+                : cartProvider.cartQty > 0
+                    ? SingleChildScrollView(
+                        padding: const EdgeInsets.only(bottom: 56),
+                        child: Column(
+                          children: [
+                            Column(children: [
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              ListTile(
+                                leading: SizedBox(
+                                  height: 60,
+                                  width: 60,
+                                  child: ClipRRect(
+                                    borderRadius:
+                                        BorderRadius.circular(4),
+                                    child: Image.network(
+                                      dSnapshot?['imageUrl'],
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                                title: Text(dSnapshot?['shopName']),
+                                subtitle: Text(
+                                  dSnapshot?['address'],
+                                  style: const TextStyle(
+                                      fontSize: 12, color: Colors.grey),
+                                ),
+                              ),
+                              const CustomToggleButton(),
+                              Divider(
+                                color: Colors.grey[300],
+                              )
+                            ]),
+                            CartList(
+                              documentSnapshot: widget.documentSnapshot,
+                            ),
+                            CouponWidget(
+                              couponVendor: dSnapshot?['uid'],
+                            ),
+                            BillingDetailsWidget(
+                              subTotal: cartProvider.subTotal,
+                              discount: discount,
+                              deliveryFee: deliveryFee,
+                              payable: payable,
+                              savings: cartProvider.savings,
+                              textStyle: textStyle,
+                            )
+                          ],
+                        ),
+                      )
+                    : const Center(
+                        child: Text(
+                          "Cart is Empty , Please add some products",
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+          ),
+        ),
+      ),
+    );
   }
 }
